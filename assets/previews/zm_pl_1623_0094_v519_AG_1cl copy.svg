@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#12210d"/>
+      <stop offset="100%" stop-color="#091019"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1600" fill="url(#bg)"/>
+  <circle cx="690" cy="220" r="180" fill="#89ff6a" opacity="0.2"/>
+  <circle cx="180" cy="1240" r="220" fill="#4db2ff" opacity="0.16"/>
+  <text x="84" y="170" fill="#e3ffe3" font-family="Segoe UI, Arial, sans-serif" font-size="48" letter-spacing="8">PLAYABLE</text>
+  <text x="84" y="280" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="92" font-weight="700">ZM V519</text>
+  <rect x="84" y="410" width="732" height="900" rx="44" fill="#ffffff" opacity="0.06" stroke="#ffffff" stroke-opacity="0.16"/>
+  <rect x="180" y="560" width="540" height="120" rx="26" fill="#89ff6a" opacity="0.82"/>
+  <rect x="180" y="730" width="420" height="120" rx="26" fill="#ffffff" opacity="0.22"/>
+  <rect x="180" y="900" width="500" height="120" rx="26" fill="#4db2ff" opacity="0.42"/>
+  <text x="84" y="1430" fill="#b9bfd6" font-family="Segoe UI, Arial, sans-serif" font-size="40">zm_pl_1623_0094_v519_AG_1cl.html</text>
+</svg>

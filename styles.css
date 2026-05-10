@@ -1,0 +1,378 @@
+:root {
+  --panel: rgba(64, 25, 24, 0.78);
+  --panel-strong: rgba(91, 34, 31, 0.9);
+  --line: rgba(255, 232, 214, 0.14);
+  --shadow: 0 30px 80px rgba(33, 8, 6, 0.45);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background-color: #4f1619;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(231, 188, 120, 0.2) 0, rgba(231, 188, 120, 0.2) 4%, transparent 4.2%),
+    radial-gradient(circle at 50% 50%, rgba(125, 27, 36, 0.78) 0, rgba(125, 27, 36, 0.78) 12%, transparent 12.3%),
+    radial-gradient(circle at 50% 50%, rgba(233, 211, 170, 0.18) 0, rgba(233, 211, 170, 0.18) 22%, transparent 22.4%),
+    radial-gradient(circle at 50% 50%, rgba(95, 18, 27, 0.92) 0, rgba(95, 18, 27, 0.92) 34%, transparent 34.4%),
+    radial-gradient(circle at 12% 18%, rgba(244, 211, 160, 0.08) 0, rgba(244, 211, 160, 0.08) 2%, transparent 2.2%),
+    radial-gradient(circle at 88% 22%, rgba(244, 211, 160, 0.08) 0, rgba(244, 211, 160, 0.08) 2%, transparent 2.2%),
+    radial-gradient(circle at 18% 84%, rgba(244, 211, 160, 0.08) 0, rgba(244, 211, 160, 0.08) 2%, transparent 2.2%),
+    radial-gradient(circle at 82% 78%, rgba(244, 211, 160, 0.08) 0, rgba(244, 211, 160, 0.08) 2%, transparent 2.2%),
+    repeating-linear-gradient(45deg, rgba(108, 22, 29, 0.18) 0 14px, rgba(88, 16, 25, 0.18) 14px 28px),
+    repeating-linear-gradient(-45deg, rgba(255, 234, 202, 0.03) 0 12px, rgba(255, 234, 202, 0) 12px 24px),
+    linear-gradient(180deg, #6b1d23 0%, #4f1619 42%, #3a1015 100%);
+  background-size:
+    900px 900px,
+    900px 900px,
+    900px 900px,
+    900px 900px,
+    320px 320px,
+    320px 320px,
+    320px 320px,
+    320px 320px,
+    auto,
+    auto,
+    auto;
+  background-position:
+    center center,
+    center center,
+    center center,
+    center center,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    center center,
+    center center,
+    center center;
+}
+
+body {
+  padding: 28px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.shell {
+  width: min(1280px, 100%);
+  margin: 0 auto;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 32px;
+  background: var(--panel);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow);
+  min-height: calc(100vh - 56px);
+  position: relative;
+  overflow: hidden;
+}
+
+.shell::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 24px;
+  border: 1px solid rgba(238, 207, 167, 0.16);
+  pointer-events: none;
+}
+
+.shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 220, 176, 0.06) 0, transparent 24%),
+    radial-gradient(circle at 80% 76%, rgba(255, 220, 176, 0.05) 0, transparent 26%),
+    repeating-linear-gradient(0deg, rgba(255, 239, 220, 0.018) 0 1px, transparent 1px 3px);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.intro-copy h1 {
+  margin: 0;
+  color: rgba(255, 239, 220, 0.96);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.intro-copy p {
+  margin: 8px 0 0;
+  color: rgba(255, 223, 194, 0.66);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.intro-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: rgba(255, 239, 220, 0.9);
+  text-decoration: none;
+  background: rgba(255, 230, 210, 0.06);
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+
+.intro-link:hover {
+  border-color: rgba(255, 228, 194, 0.28);
+  background: rgba(255, 230, 210, 0.1);
+  transform: translateY(-1px);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 22px;
+  align-items: stretch;
+  min-height: 624px;
+}
+
+.stage-view,
+.carousel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--panel-strong);
+  height: 624px;
+}
+
+.stage-view {
+  overflow: hidden;
+  padding: 18px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 212, 155, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(255, 240, 220, 0.025), rgba(255, 240, 220, 0.012)),
+    var(--panel-strong);
+}
+
+.stage-screen {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 234, 213, 0.035), rgba(255, 234, 213, 0)),
+    #2b0f12;
+}
+
+.stage-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: #000;
+}
+
+.stage-empty {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(232, 188, 120, 0.08), transparent 38%),
+    linear-gradient(180deg, rgba(255, 238, 218, 0.018), rgba(255, 238, 218, 0));
+}
+
+.stage-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.stage-noise {
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(235, 243, 248, 0.06), rgba(235, 243, 248, 0.02)),
+    #0f1215;
+}
+
+.stage-noise::before,
+.stage-noise::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+}
+
+.stage-noise::before {
+  opacity: 0.42;
+  background:
+    repeating-radial-gradient(#000 0 0.0001%, #fff 0 0.0002%) 50% 0 / 3400px 3400px,
+    repeating-conic-gradient(#000 0 0.0001%, #fff 0 0.0002%) 60% 60% / 3400px 3400px;
+  background-blend-mode: difference;
+  filter: contrast(1.15) grayscale(1);
+  animation: tv-static-noise 0.42s infinite alternate;
+}
+
+.stage-noise::after {
+  opacity: 0.2;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.16) 48%, rgba(15, 20, 24, 0.16) 50%, rgba(255, 255, 255, 0.12) 52%, transparent 100%),
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0 1px, rgba(22, 27, 31, 0.06) 1px 10px, transparent 10px 24px);
+  mix-blend-mode: screen;
+  animation: tv-scan 2.8s linear infinite, tv-flicker 0.24s steps(2) infinite;
+}
+
+@keyframes tv-static-noise {
+  0% {
+    background-position: 50% 0, 60% 60%;
+  }
+  100% {
+    background-position: 50% 0, 60% 50%;
+  }
+}
+
+@keyframes tv-scan {
+  0% {
+    transform: translateY(-60%);
+  }
+  100% {
+    transform: translateY(60%);
+  }
+}
+
+@keyframes tv-flicker {
+  0% {
+    opacity: 0.22;
+  }
+  50% {
+    opacity: 0.34;
+  }
+  100% {
+    opacity: 0.26;
+  }
+}
+
+.carousel {
+  padding: 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+.rail {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding-right: 4px;
+}
+
+.carousel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.carousel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+
+.card {
+  display: block;
+  padding: 10px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 236, 214, 0.05), rgba(255, 236, 214, 0.025));
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 228, 194, 0.22);
+}
+
+.card.active {
+  border-color: rgba(233, 188, 120, 0.52);
+  background: linear-gradient(180deg, rgba(233, 188, 120, 0.14), rgba(255, 236, 214, 0.03));
+  box-shadow: inset 0 0 0 1px rgba(233, 188, 120, 0.14);
+}
+
+.thumb {
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
+  background: #030507;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.is-hidden {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  body {
+    padding: 14px;
+  }
+
+  .shell {
+    padding: 16px;
+    border-radius: 24px;
+    min-height: auto;
+  }
+
+  .intro {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .stage-view,
+  .carousel {
+    border-radius: 22px;
+    height: auto;
+  }
+
+  .rail {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    height: auto;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-right: 0;
+    padding-bottom: 8px;
+    scroll-snap-type: x proximity;
+  }
+
+  .rail::-webkit-scrollbar {
+    width: auto;
+    height: 10px;
+  }
+
+  .carousel {
+    max-height: none;
+    overflow: hidden;
+  }
+
+  .stage-screen {
+    min-height: 420px;
+  }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playable Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="intro">
+      <div class="intro-copy">
+        <h1>Ivan Losik</h1>
+        <p>Cocos creator Playable developer</p>
+      </div>
+      <a
+        class="intro-link"
+        href="https://www.linkedin.com/in/ivan-losik-b2311433a"
+        target="_blank"
+        rel="noreferrer"
+      >
+        LinkedIn
+      </a>
+    </header>
+
+    <section class="layout">
+      <article class="stage-view">
+        <div class="stage-screen">
+          <div class="stage-empty stage-noise" id="stageEmpty"></div>
+          <div class="stage-loading stage-noise is-hidden" id="stageLoading"></div>
+          <iframe class="stage-frame is-hidden" id="stageFrame" title="Playable" allowfullscreen></iframe>
+        </div>
+      </article>
+
+      <aside class="carousel" id="playableList">
+        <div class="rail" id="playableRail"></div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="assets/oneko.js" data-cat="assets/oneko.gif"></script>
+  <script src="assets/oneko-runaway.js" data-cat="assets/oneko.gif"></script>
+  <script src="playables.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
