@@ -1,10 +1,22 @@
 const stageFrame = document.getElementById("stageFrame");
+const stageIntroGif = document.getElementById("stageIntroGif");
 const stageEmpty = document.getElementById("stageEmpty");
 const stageLoading = document.getElementById("stageLoading");
 const carousel = document.getElementById("playableList");
 const rail = document.getElementById("playableRail");
 const stageScreen = document.querySelector(".stage-screen");
+const introGifs = [
+  { src: "assets/2njr.gif", duration: 1440 },
+  { src: "assets/5KzX.gif", duration: 10560 },
+  { src: "assets/5OYG.gif", duration: 2240 },
+  { src: "assets/5RWp.gif", duration: 1000 },
+];
+const INTRO_NOISE_MS = 1000;
 let playables = [];
+let activeTransitionId = 0;
+let introGifIndex = 0;
+let introCycleTimer = null;
+let isIntroCycleActive = false;
 window.__onekoMouse = window.__onekoMouse || {
   x: window.innerWidth / 2,
   y: window.innerHeight / 2,
@@ -127,7 +139,9 @@ function bindFrameMouseTracking() {
 
 stageFrame.addEventListener("load", bindFrameMouseTracking);
 stageFrame.addEventListener("load", () => {
-  stageLoading.classList.add("is-hidden");
+  if (!stageFrame.classList.contains("is-hidden")) {
+    stageLoading.classList.add("is-hidden");
+  }
 });
 updateStageBounds();
 
@@ -168,12 +182,60 @@ window.setInterval(() => {
   updateGlobalMouse(lastStageMouseX, lastStageMouseY);
 }, 120);
 
+function clearIntroCycleTimer() {
+  if (introCycleTimer !== null) {
+    window.clearTimeout(introCycleTimer);
+    introCycleTimer = null;
+  }
+}
+
+function showIntroNoise() {
+  if (!isIntroCycleActive) {
+    return;
+  }
+
+  stageIntroGif.classList.add("is-hidden");
+  stageIntroGif.removeAttribute("src");
+  stageEmpty.classList.remove("is-hidden");
+  introCycleTimer = window.setTimeout(showNextIntroGif, INTRO_NOISE_MS);
+}
+
+function showNextIntroGif() {
+  if (!isIntroCycleActive) {
+    return;
+  }
+
+  const gif = introGifs[introGifIndex];
+  introGifIndex = (introGifIndex + 1) % introGifs.length;
+  stageEmpty.classList.add("is-hidden");
+  stageIntroGif.classList.remove("is-hidden");
+  stageIntroGif.removeAttribute("src");
+  stageIntroGif.src = gif.src;
+  introCycleTimer = window.setTimeout(showIntroNoise, gif.duration);
+}
+
+function startIntroCycle() {
+  isIntroCycleActive = true;
+  clearIntroCycleTimer();
+  showNextIntroGif();
+}
+
+function stopIntroCycle() {
+  isIntroCycleActive = false;
+  clearIntroCycleTimer();
+  stageIntroGif.classList.add("is-hidden");
+  stageIntroGif.removeAttribute("src");
+}
+
 function setEmptyStage() {
+  activeTransitionId += 1;
   stageFrame.src = "about:blank";
   stageFrame.classList.add("is-hidden");
-  stageEmpty.classList.remove("is-hidden");
+  stageIntroGif.classList.remove("is-hidden");
+  stageEmpty.classList.add("is-hidden");
   stageLoading.classList.add("is-hidden");
   isPointerInsideStage = false;
+  startIntroCycle();
 
   rail.querySelectorAll(".card").forEach((card) => {
     card.classList.remove("active");
@@ -187,10 +249,15 @@ function setActivePlayable(path, scrollIntoView = false) {
     return;
   }
 
-  stageLoading.classList.remove("is-hidden");
-  stageFrame.src = playable.path;
-  stageFrame.classList.remove("is-hidden");
+  const transitionId = activeTransitionId + 1;
+  activeTransitionId = transitionId;
+
+  stopIntroCycle();
+  stageFrame.src = "about:blank";
+  stageFrame.classList.add("is-hidden");
+  stageIntroGif.classList.add("is-hidden");
   stageEmpty.classList.add("is-hidden");
+  stageLoading.classList.remove("is-hidden");
 
   rail.querySelectorAll(".card").forEach((card) => {
     const isActive = card.dataset.path === playable.path;
@@ -200,6 +267,15 @@ function setActivePlayable(path, scrollIntoView = false) {
       window.setTimeout(updatePlayableScrollHints, 220);
     }
   });
+
+  window.setTimeout(() => {
+    if (transitionId !== activeTransitionId) {
+      return;
+    }
+
+    stageFrame.src = playable.path;
+    stageFrame.classList.remove("is-hidden");
+  }, 1000);
 }
 
 function renderCards() {
