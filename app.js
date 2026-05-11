@@ -5,11 +5,12 @@ const stageLoading = document.getElementById("stageLoading");
 const carousel = document.getElementById("playableList");
 const rail = document.getElementById("playableRail");
 const stageScreen = document.querySelector(".stage-screen");
+const PAGE_VOLUME = 0.1;
 const introGifs = [
-  { src: "assets/2njr.gif", duration: 1440 },
-  { src: "assets/5KzX.gif", duration: 10560 },
-  { src: "assets/5OYG.gif", duration: 2240 },
-  { src: "assets/5RWp.gif", duration: 1000 },
+  {src: "assets/2njr.gif", duration: 1440},
+  {src: "assets/5KzX.gif", duration: 10560},
+  {src: "assets/5OYG.gif", duration: 2240},
+  {src: "assets/5RWp.gif", duration: 1000},
 ];
 const INTRO_NOISE_MS = 1000;
 let playables = [];
@@ -26,6 +27,39 @@ let isPointerInsideStage = false;
 let lastStageMouseX = window.innerWidth / 2;
 let lastStageMouseY = window.innerHeight / 2;
 let lastIframeMouseTimestamp = 0;
+
+window.PAGE_VOLUME = PAGE_VOLUME;
+
+function getPageVolume() {
+  const volume = Number(window.PAGE_VOLUME);
+  return Number.isFinite(volume) ? Math.min(Math.max(volume, 0), 1) : 1;
+}
+
+function applyVolumeToDocument(targetWindow, targetDocument) {
+  const volume = getPageVolume();
+
+  targetDocument.querySelectorAll("audio, video").forEach((media) => {
+    media.volume = volume;
+    media.muted = volume === 0;
+  });
+
+  if (targetWindow.cc && targetWindow.cc.audioEngine) {
+    targetWindow.cc.audioEngine.setEffectsVolume(volume);
+    targetWindow.cc.audioEngine.setMusicVolume(volume);
+  }
+}
+
+function applyPageVolume() {
+  applyVolumeToDocument(window, document);
+
+  try {
+    if (stageFrame.contentWindow && stageFrame.contentDocument) {
+      applyVolumeToDocument(stageFrame.contentWindow, stageFrame.contentDocument);
+    }
+  } catch (error) {
+    // Some embedded playables may block parent access.
+  }
+}
 
 function updateStageBounds() {
   const rect = stageScreen.getBoundingClientRect();
@@ -47,7 +81,7 @@ document.addEventListener("mousemove", (event) => {
 });
 
 window.addEventListener("resize", updateStageBounds);
-window.addEventListener("scroll", updateStageBounds, { passive: true });
+window.addEventListener("scroll", updateStageBounds, {passive: true});
 
 function updatePlayableScrollHints() {
   const horizontalOverflow = rail.scrollWidth > rail.clientWidth + 1;
@@ -61,8 +95,8 @@ function updatePlayableScrollHints() {
   carousel.classList.toggle("can-scroll-forward", maxPosition - position > 1);
 }
 
-carousel.addEventListener("scroll", updatePlayableScrollHints, { passive: true });
-rail.addEventListener("scroll", updatePlayableScrollHints, { passive: true });
+carousel.addEventListener("scroll", updatePlayableScrollHints, {passive: true});
+rail.addEventListener("scroll", updatePlayableScrollHints, {passive: true});
 window.addEventListener("resize", updatePlayableScrollHints);
 
 function updateStageFallbackMouse(x, y) {
@@ -138,6 +172,7 @@ function bindFrameMouseTracking() {
 }
 
 stageFrame.addEventListener("load", bindFrameMouseTracking);
+stageFrame.addEventListener("load", applyPageVolume);
 stageFrame.addEventListener("load", () => {
   if (!stageFrame.classList.contains("is-hidden")) {
     stageLoading.classList.add("is-hidden");
@@ -263,7 +298,7 @@ function setActivePlayable(path, scrollIntoView = false) {
     const isActive = card.dataset.path === playable.path;
     card.classList.toggle("active", isActive);
     if (isActive && scrollIntoView) {
-      card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      card.scrollIntoView({behavior: "smooth", inline: "center", block: "nearest"});
       window.setTimeout(updatePlayableScrollHints, 220);
     }
   });
