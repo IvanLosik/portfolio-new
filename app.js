@@ -1,6 +1,7 @@
 const stageFrame = document.getElementById("stageFrame");
 const stageEmpty = document.getElementById("stageEmpty");
 const stageLoading = document.getElementById("stageLoading");
+const carousel = document.getElementById("playableList");
 const rail = document.getElementById("playableRail");
 const stageScreen = document.querySelector(".stage-screen");
 let playables = [];
@@ -35,6 +36,22 @@ document.addEventListener("mousemove", (event) => {
 
 window.addEventListener("resize", updateStageBounds);
 window.addEventListener("scroll", updateStageBounds, { passive: true });
+
+function updatePlayableScrollHints() {
+  const horizontalOverflow = rail.scrollWidth > rail.clientWidth + 1;
+  const target = rail;
+  const position = horizontalOverflow ? target.scrollLeft : target.scrollTop;
+  const maxPosition = horizontalOverflow
+    ? target.scrollWidth - target.clientWidth
+    : target.scrollHeight - target.clientHeight;
+
+  carousel.classList.toggle("can-scroll-back", position > 1);
+  carousel.classList.toggle("can-scroll-forward", maxPosition - position > 1);
+}
+
+carousel.addEventListener("scroll", updatePlayableScrollHints, { passive: true });
+rail.addEventListener("scroll", updatePlayableScrollHints, { passive: true });
+window.addEventListener("resize", updatePlayableScrollHints);
 
 function updateStageFallbackMouse(x, y) {
   lastStageMouseX = x;
@@ -180,6 +197,7 @@ function setActivePlayable(path, scrollIntoView = false) {
     card.classList.toggle("active", isActive);
     if (isActive && scrollIntoView) {
       card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      window.setTimeout(updatePlayableScrollHints, 220);
     }
   });
 }
@@ -209,6 +227,7 @@ function loadPlayables() {
   playables = config;
   renderCards();
   setEmptyStage();
+  updatePlayableScrollHints();
 }
 
 loadPlayables();

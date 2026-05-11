@@ -10,7 +10,7 @@
   <circle cx="180" cy="1120" r="220" fill="#6ff3d7" opacity="0.16"/>
   <text x="84" y="170" fill="#f7f2ff" font-family="Segoe UI, Arial, sans-serif" font-size="48" letter-spacing="8">PLAYABLE</text>
   <text x="84" y="280" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="92" font-weight="700">Luxury Stones</text>
-  <rect x="84" y="390" width="732" height="910" rx="44" fill="#ffffff" opacity="0.06" stroke="#ffffff" stroke-opacity="0.16"/>
+  <rect x="84" y="390" width="732" height="910" rx="44" fill="#ffffff" opacity="0.06"/>
   <polygon points="450,520 580,720 450,920 320,720" fill="#68f2de"/>
   <polygon points="450,560 540,720 450,880 360,720" fill="#cefff6"/>
   <text x="84" y="1430" fill="#b9bfd6" font-family="Segoe UI, Arial, sans-serif" font-size="40">ra-izm-luxury-stones.html</text>

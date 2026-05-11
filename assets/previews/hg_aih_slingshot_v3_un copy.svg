@@ -10,7 +10,7 @@
   <circle cx="220" cy="1180" r="220" fill="#58b7ff" opacity="0.16"/>
   <text x="84" y="170" fill="#f4e8ff" font-family="Segoe UI, Arial, sans-serif" font-size="48" letter-spacing="8">PLAYABLE</text>
   <text x="84" y="280" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="92" font-weight="700">Slingshot V3</text>
-  <rect x="84" y="410" width="732" height="900" rx="44" fill="#ffffff" opacity="0.06" stroke="#ffffff" stroke-opacity="0.16"/>
+  <rect x="84" y="410" width="732" height="900" rx="44" fill="#ffffff" opacity="0.06"/>
   <path d="M300 980 C300 780 370 660 450 660 C530 660 600 780 600 980" fill="none" stroke="#ff8a66" stroke-width="26"/>
   <circle cx="450" cy="890" r="52" fill="#ffffff"/>
   <path d="M450 890 L650 620" stroke="#58b7ff" stroke-width="16"/>
