@@ -368,7 +368,7 @@ body {
 
   .side-panel {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 108px;
+    grid-template-columns: minmax(0, 1fr) 92px;
     height: auto;
     min-height: auto;
     align-items: stretch;
@@ -398,8 +398,8 @@ body {
 
   .social-link {
     min-height: 0;
-    padding: 0 10px;
-    font-size: 13px;
+    padding: 0 8px;
+    font-size: 12px;
   }
 
   .rail {
@@ -420,7 +420,7 @@ body {
   .carousel {
     order: 1;
     flex: none;
-    height: 116px;
+    height: 128px;
     max-height: none;
     overflow: hidden;
   }
@@ -444,6 +444,6 @@ body {
   }
 
   .card {
-    flex: 0 0 170px;
+    flex: 0 0 158px;
   }
 }
