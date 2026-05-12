@@ -18,38 +18,14 @@ body {
   min-height: 100%;
   background-color: #4f1619;
   background-image:
-    radial-gradient(circle at 50% 50%, rgba(231, 188, 120, 0.2) 0, rgba(231, 188, 120, 0.2) 4%, transparent 4.2%),
-    radial-gradient(circle at 50% 50%, rgba(125, 27, 36, 0.78) 0, rgba(125, 27, 36, 0.78) 12%, transparent 12.3%),
-    radial-gradient(circle at 50% 50%, rgba(233, 211, 170, 0.18) 0, rgba(233, 211, 170, 0.18) 22%, transparent 22.4%),
-    radial-gradient(circle at 50% 50%, rgba(95, 18, 27, 0.92) 0, rgba(95, 18, 27, 0.92) 34%, transparent 34.4%),
-    radial-gradient(circle at 12% 18%, rgba(244, 211, 160, 0.08) 0, rgba(244, 211, 160, 0.08) 2%, transparent 2.2%),
-    radial-gradient(circle at 88% 22%, rgba(244, 211, 160, 0.08) 0, rgba(244, 211, 160, 0.08) 2%, transparent 2.2%),
-    radial-gradient(circle at 18% 84%, rgba(244, 211, 160, 0.08) 0, rgba(244, 211, 160, 0.08) 2%, transparent 2.2%),
-    radial-gradient(circle at 82% 78%, rgba(244, 211, 160, 0.08) 0, rgba(244, 211, 160, 0.08) 2%, transparent 2.2%),
     repeating-linear-gradient(45deg, rgba(108, 22, 29, 0.18) 0 14px, rgba(88, 16, 25, 0.18) 14px 28px),
     repeating-linear-gradient(-45deg, rgba(255, 234, 202, 0.03) 0 12px, rgba(255, 234, 202, 0) 12px 24px),
     linear-gradient(180deg, #6b1d23 0%, #4f1619 42%, #3a1015 100%);
   background-size:
-    900px 900px,
-    900px 900px,
-    900px 900px,
-    900px 900px,
-    320px 320px,
-    320px 320px,
-    320px 320px,
-    320px 320px,
     auto,
     auto,
     auto;
   background-position:
-    center center,
-    center center,
-    center center,
-    center center,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
     center center,
     center center,
     center center;
@@ -88,8 +64,6 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 18%, rgba(255, 220, 176, 0.06) 0, transparent 24%),
-    radial-gradient(circle at 80% 76%, rgba(255, 220, 176, 0.05) 0, transparent 26%),
     repeating-linear-gradient(0deg, rgba(255, 239, 220, 0.018) 0 1px, transparent 1px 3px);
   opacity: 0.75;
   pointer-events: none;
@@ -157,9 +131,8 @@ body {
 .side-panel {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   gap: 12px;
-  min-height: 624px;
+  height: 624px;
 }
 
 .social-links {
@@ -173,7 +146,6 @@ body {
   overflow: hidden;
   padding: 18px;
   background:
-    radial-gradient(circle at 50% 0%, rgba(255, 212, 155, 0.08), transparent 28%),
     linear-gradient(180deg, rgba(255, 240, 220, 0.025), rgba(255, 240, 220, 0.012)),
     var(--panel-strong);
 }
@@ -189,19 +161,6 @@ body {
     #2b0f12;
 }
 
-.stage-intro-gif {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  width: 88%;
-  height: 88%;
-  object-fit: contain;
-  display: block;
-  background: transparent;
-  transform: translate(-50%, -50%);
-}
-
 .stage-frame {
   width: 100%;
   height: 100%;
@@ -215,7 +174,6 @@ body {
   inset: 0;
   z-index: 1;
   background:
-    radial-gradient(circle at center, rgba(232, 188, 120, 0.08), transparent 38%),
     linear-gradient(180deg, rgba(255, 238, 218, 0.018), rgba(255, 238, 218, 0));
 }
 
@@ -290,7 +248,8 @@ body {
 }
 
 .carousel {
-  height: 312px;
+  flex: 1;
+  min-height: 0;
   padding: 14px;
   overflow: hidden;
   overscroll-behavior: contain;
@@ -406,6 +365,7 @@ body {
   }
 
   .side-panel {
+    height: auto;
     min-height: auto;
   }
 

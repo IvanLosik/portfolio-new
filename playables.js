@@ -1,34 +1,54 @@
 window.PLAYABLES = [
   {
-    path: "builds/ra-izm-luxury-stones.html",
-    image: "assets/previews/ra-izm-luxury-stones.svg"
+    path: "builds/portfolio/BlackHole.html",
+    image: "builds/portfolio/BlackHole.png"
   },
   {
-    path: "builds/tdt_wbl_corestuck2D_Countdown_Unity.html",
-    image: "assets/previews/tdt_wbl_corestuck2D_Countdown_Unity.svg"
+    path: "builds/portfolio/CoreStack.html",
+    image: "builds/portfolio/coreStack.png"
   },
   {
-    path: "builds/hg_aih_slingshot_v3_un.html",
-    image: "assets/previews/hg_aih_slingshot_v3_un.svg"
+    path: "builds/portfolio/desert.html",
+    image: "builds/portfolio/desert.png"
   },
   {
-    path: "builds/zm_pl_1623_0094_v519_AG_1cl.html",
-    image: "assets/previews/zm_pl_1623_0094_v519_AG_1cl.svg"
+    path: "builds/portfolio/Drawvideo.html",
+    image: "builds/portfolio/drawvideo.png"
   },
   {
-    path: "builds/ra-izm-luxury-stones copy.html",
-    image: "assets/previews/ra-izm-luxury-stones copy.svg"
+    path: "builds/portfolio/gates_of_olympus_un.html",
+    image: "builds/portfolio/gates_of_olympus_un.png"
   },
   {
-    path: "builds/tdt_wbl_corestuck2D_Countdown_Unity copy.html",
-    image: "assets/previews/tdt_wbl_corestuck2D_Countdown_Unity copy.svg"
+    path: "builds/portfolio/lab.html",
+    image: "builds/portfolio/lab.png"
   },
   {
-    path: "builds/hg_aih_slingshot_v3_un copy.html",
-    image: "assets/previews/hg_aih_slingshot_v3_un copy.svg"
+    path: "builds/portfolio/moving_shelves.html",
+    image: "builds/portfolio/moving_shelves.png"
   },
   {
-    path: "builds/zm_pl_1623_0094_v519_AG_1cl copy.html",
-    image: "assets/previews/zm_pl_1623_0094_v519_AG_1cl copy.svg"
+    path: "builds/portfolio/pool.html",
+    image: "builds/portfolio/pool.png"
+  },
+  {
+    path: "builds/portfolio/robot.html",
+    image: "builds/portfolio/robot.png"
+  },
+  {
+    path: "builds/portfolio/snake.html",
+    image: "builds/portfolio/snake.png"
+  },
+  {
+    path: "builds/portfolio/Tetrisfreeplace.html",
+    image: "builds/portfolio/Tetrisfreeplace.png"
+  },
+  {
+    path: "builds/portfolio/whiteout.html",
+    image: "builds/portfolio/whiteout.png"
+  },
+  {
+    path: "builds/portfolio/zootopia.html",
+    image: "builds/portfolio/zootopia.png"
   },
 ];
