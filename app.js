@@ -19,6 +19,17 @@ let lastIframeMouseTimestamp = 0;
 
 window.PAGE_VOLUME = PAGE_VOLUME;
 
+function loadDesktopRunawayCat() {
+  if (!window.matchMedia("(min-width: 721px)").matches) {
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.src = "assets/oneko-runaway.js";
+  script.dataset.cat = "assets/oneko.gif";
+  document.body.appendChild(script);
+}
+
 function getPageVolume() {
   const volume = Number(window.PAGE_VOLUME);
   return Number.isFinite(volume) ? Math.min(Math.max(volume, 0), 1) : 1;
@@ -281,4 +292,5 @@ function loadPlayables() {
   updatePlayableScrollHints();
 }
 
+loadDesktopRunawayCat();
 loadPlayables();

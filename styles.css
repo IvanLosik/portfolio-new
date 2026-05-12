@@ -357,6 +357,8 @@ body {
   .intro {
     align-items: flex-start;
     flex-direction: column;
+    padding-top: 8px;
+    padding-left: 8px;
   }
 
   .layout {
@@ -365,8 +367,11 @@ body {
   }
 
   .side-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 108px;
     height: auto;
     min-height: auto;
+    align-items: stretch;
   }
 
   .stage-view,
@@ -375,9 +380,31 @@ body {
     height: auto;
   }
 
+  .stage-view {
+    padding: 12px;
+  }
+
+  .stage-screen {
+    aspect-ratio: 9 / 16;
+    height: auto;
+    min-height: 0;
+  }
+
+  .social-links {
+    order: 2;
+    grid-template-rows: 1fr 1fr;
+    height: 100%;
+  }
+
+  .social-link {
+    min-height: 0;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+
   .rail {
     display: flex;
-    height: auto;
+    height: 100%;
     max-height: none;
     overflow-x: auto;
     overflow-y: hidden;
@@ -391,6 +418,9 @@ body {
   }
 
   .carousel {
+    order: 1;
+    flex: none;
+    height: 116px;
     max-height: none;
     overflow: hidden;
   }
@@ -415,9 +445,5 @@ body {
 
   .card {
     flex: 0 0 170px;
-  }
-
-  .stage-screen {
-    min-height: 420px;
   }
 }
