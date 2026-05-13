@@ -1,12 +1,48 @@
 const stageFrame = document.getElementById("stageFrame");
 const stageEmpty = document.getElementById("stageEmpty");
+const stageGif = document.getElementById("stageGif");
 const stageLoading = document.getElementById("stageLoading");
 const carousel = document.getElementById("playableList");
 const rail = document.getElementById("playableRail");
 const stageScreen = document.querySelector(".stage-screen");
 const PAGE_VOLUME = 0.1;
+const START_GIFS = [
+  "assets/start-gifs/2njr.gif",
+  "assets/start-gifs/5KzX.gif",
+  "assets/start-gifs/5OYG.gif",
+  "assets/start-gifs/5RWp.gif",
+  "assets/start-gifs/leopold-coward.gif",
+  "assets/start-gifs/lets-live-friendly-friends.gif",
+  "assets/start-gifs/nu-pogodi-just-you-wait (1).gif",
+  "assets/start-gifs/nu-pogodi-just-you-wait (2).gif",
+  "assets/start-gifs/nu-pogodi-just-you-wait.gif",
+  "assets/start-gifs/nu-pogodi-water.gif",
+  "assets/start-gifs/nu-pogodi-well-just-you-wait.gif",
+  "assets/start-gifs/smoke-dog.gif",
+  "assets/start-gifs/tanec-tango.gif",
+  "assets/start-gifs/tenor.gif",
+  "assets/start-gifs/vinni-pukh-pyatachok (1).gif",
+  "assets/start-gifs/vinni-pukh-pyatachok.gif",
+  "assets/start-gifs/vinni-pukh-winnie-the-pooh (1).gif",
+  "assets/start-gifs/vinni-pukh-winnie-the-pooh (2).gif",
+  "assets/start-gifs/vinni-pukh-winnie-the-pooh.gif",
+  "assets/start-gifs/winnie-the-pooh-vinni-pukh.gif",
+  "assets/start-gifs/wolf-guitar.gif",
+  "assets/start-gifs/давайтежитьдружно.gif",
+  "assets/start-gifs/ну-погоди.gif",
+  "assets/start-gifs/нупогоди-танец.gif",
+];
+const START_NOISE_DURATION = 1000;
+const FALLBACK_GIF_DURATION = 3000;
+const MAX_START_GIF_DURATION = 4500;
+const MAX_START_GIF_FRAME_DELAY = 500;
 let playables = [];
 let activeTransitionId = 0;
+let startGifIndex = 0;
+let startGifTimer = null;
+let startNoiseTimer = null;
+let isStartLoopRunning = false;
+const gifDurationCache = new Map();
 window.__onekoMouse = window.__onekoMouse || {
   x: window.innerWidth / 2,
   y: window.innerHeight / 2,
@@ -18,6 +54,88 @@ let lastStageMouseY = window.innerHeight / 2;
 let lastIframeMouseTimestamp = 0;
 
 window.PAGE_VOLUME = PAGE_VOLUME;
+
+function getGifDuration(path) {
+  if (gifDurationCache.has(path)) {
+    return gifDurationCache.get(path);
+  }
+
+  const durationPromise = fetch(path)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Unable to load ${path}`);
+      }
+      return response.arrayBuffer();
+    })
+    .then((buffer) => {
+      const bytes = new Uint8Array(buffer);
+      let duration = 0;
+
+      for (let i = 0; i < bytes.length - 5; i += 1) {
+        if (bytes[i] === 0x21 && bytes[i + 1] === 0xf9 && bytes[i + 2] === 0x04) {
+          const frameDelay = bytes[i + 4] | (bytes[i + 5] << 8);
+          duration += Math.min(Math.max(frameDelay * 10, 20), MAX_START_GIF_FRAME_DELAY);
+        }
+      }
+
+      return Math.min(duration || FALLBACK_GIF_DURATION, MAX_START_GIF_DURATION);
+    })
+    .catch(() => FALLBACK_GIF_DURATION);
+
+  gifDurationCache.set(path, durationPromise);
+  return durationPromise;
+}
+
+function clearStartLoopTimers() {
+  window.clearTimeout(startGifTimer);
+  window.clearTimeout(startNoiseTimer);
+  startGifTimer = null;
+  startNoiseTimer = null;
+}
+
+function stopStartLoop() {
+  isStartLoopRunning = false;
+  clearStartLoopTimers();
+  stageEmpty.classList.remove("is-showing-gif");
+  stageGif.removeAttribute("src");
+}
+
+async function showNextStartGif() {
+  if (!isStartLoopRunning || START_GIFS.length === 0) {
+    return;
+  }
+
+  const path = START_GIFS[startGifIndex];
+  startGifIndex = (startGifIndex + 1) % START_GIFS.length;
+  const duration = await getGifDuration(path);
+
+  if (!isStartLoopRunning || stageEmpty.classList.contains("is-hidden")) {
+    return;
+  }
+
+  stageGif.src = `${path}?restart=${Date.now()}`;
+  stageEmpty.classList.add("is-showing-gif");
+
+  startGifTimer = window.setTimeout(() => {
+    if (!isStartLoopRunning) {
+      return;
+    }
+
+    stageEmpty.classList.remove("is-showing-gif");
+    stageGif.removeAttribute("src");
+    startNoiseTimer = window.setTimeout(showNextStartGif, START_NOISE_DURATION);
+  }, duration);
+}
+
+function startStartLoop() {
+  if (isStartLoopRunning || START_GIFS.length === 0) {
+    return;
+  }
+
+  isStartLoopRunning = true;
+  clearStartLoopTimers();
+  showNextStartGif();
+}
 
 function loadDesktopRunawayCat() {
   if (!window.matchMedia("(min-width: 721px)").matches) {
@@ -224,6 +342,7 @@ function setEmptyStage() {
   stageEmpty.classList.remove("is-hidden");
   stageLoading.classList.add("is-hidden");
   isPointerInsideStage = false;
+  startStartLoop();
 
   rail.querySelectorAll(".card").forEach((card) => {
     card.classList.remove("active");
@@ -242,6 +361,7 @@ function setActivePlayable(path, scrollIntoView = false) {
 
   stageFrame.src = "about:blank";
   stageFrame.classList.add("is-hidden");
+  stopStartLoop();
   stageEmpty.classList.add("is-hidden");
   stageLoading.classList.remove("is-hidden");
 
