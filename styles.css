@@ -295,34 +295,6 @@ body {
   display: none;
 }
 
-.carousel::before,
-.carousel::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  height: 58px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease;
-}
-
-.carousel::before {
-  top: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
-}
-
-.carousel::after {
-  bottom: 0;
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
-}
-
-.carousel.can-scroll-back::before,
-.carousel.can-scroll-forward::after {
-  opacity: 1;
-}
-
 .card {
   appearance: none;
   display: block;
@@ -332,7 +304,6 @@ body {
   border-radius: 10px;
   background: transparent;
   cursor: pointer;
-  scroll-snap-align: start;
   transition: opacity 0.18s ease, transform 0.18s ease;
 }
 
@@ -452,7 +423,6 @@ body {
     overflow-x: auto;
     overflow-y: hidden;
     padding-right: 0;
-    scroll-snap-type: x proximity;
     scrollbar-width: none;
   }
 
@@ -466,24 +436,6 @@ body {
     height: 128px;
     max-height: none;
     overflow: hidden;
-  }
-
-  .carousel::before,
-  .carousel::after {
-    top: 0;
-    bottom: 0;
-    width: 58px;
-    height: auto;
-  }
-
-  .carousel::before {
-    right: auto;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
-  }
-
-  .carousel::after {
-    left: auto;
-    background: linear-gradient(270deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
   }
 
   .card {

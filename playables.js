@@ -51,4 +51,8 @@ window.PLAYABLES = [
     path: "builds/portfolio/zootopia.html",
     image: "builds/portfolio/zootopia.png"
   },
+  {
+    path: "builds/portfolio/arkanoid.html",
+    image: "builds/portfolio/arkanoid.png"
+  }
 ];

@@ -36,12 +36,21 @@ const START_NOISE_DURATION = 1000;
 const FALLBACK_GIF_DURATION = 3000;
 const MAX_START_GIF_DURATION = 4500;
 const MAX_START_GIF_FRAME_DELAY = 500;
+const PREVIEW_AUTO_SCROLL_SPEED = 0.01;
+const PREVIEW_RESUME_DELAY = 5000;
+const WHEEL_SETTLE_DELAY = 180;
 let playables = [];
 let activeTransitionId = 0;
 let startGifIndex = 0;
 let startGifTimer = null;
 let startNoiseTimer = null;
 let isStartLoopRunning = false;
+let previewAutoScrollFrame = null;
+let lastPreviewAutoScrollTimestamp = 0;
+let previewAutoScrollOffset = 0;
+let isPreviewAutoScrollPaused = false;
+let previewResumeTimer = null;
+let previewWheelTimer = null;
 const gifDurationCache = new Map();
 window.__onekoMouse = window.__onekoMouse || {
   x: window.innerWidth / 2,
@@ -217,6 +226,121 @@ carousel.addEventListener("scroll", updatePlayableScrollHints, {passive: true});
 rail.addEventListener("scroll", updatePlayableScrollHints, {passive: true});
 window.addEventListener("resize", updatePlayableScrollHints);
 
+function isPreviewRailHorizontal() {
+  return window.matchMedia("(max-width: 720px)").matches;
+}
+
+function getPreviewLoopSize() {
+  const secondCopy = rail.querySelector('.card[data-copy="1"]');
+
+  if (secondCopy) {
+    return isPreviewRailHorizontal() ? secondCopy.offsetLeft : secondCopy.offsetTop;
+  }
+
+  return isPreviewRailHorizontal() ? rail.scrollWidth / 2 : rail.scrollHeight / 2;
+}
+
+function normalizePreviewScrollPosition() {
+  const horizontal = isPreviewRailHorizontal();
+  const loopSize = getPreviewLoopSize();
+  const viewportSize = horizontal ? rail.clientWidth : rail.clientHeight;
+
+  if (loopSize <= viewportSize) {
+    return;
+  }
+
+  if (horizontal) {
+    if (rail.scrollLeft >= loopSize) {
+      rail.scrollLeft -= loopSize;
+      previewAutoScrollOffset = rail.scrollLeft;
+    }
+  } else if (rail.scrollTop >= loopSize) {
+    rail.scrollTop -= loopSize;
+    previewAutoScrollOffset = rail.scrollTop;
+  }
+}
+
+function schedulePreviewAutoScrollResume() {
+  window.clearTimeout(previewResumeTimer);
+  previewResumeTimer = window.setTimeout(() => {
+    isPreviewAutoScrollPaused = false;
+    lastPreviewAutoScrollTimestamp = performance.now();
+    previewAutoScrollOffset = isPreviewRailHorizontal() ? rail.scrollLeft : rail.scrollTop;
+  }, PREVIEW_RESUME_DELAY);
+}
+
+function syncPreviewAutoScrollOffset() {
+  previewAutoScrollOffset = isPreviewRailHorizontal() ? rail.scrollLeft : rail.scrollTop;
+}
+
+function pausePreviewAutoScroll(shouldResume = true) {
+  isPreviewAutoScrollPaused = true;
+  syncPreviewAutoScrollOffset();
+  window.clearTimeout(previewResumeTimer);
+
+  if (shouldResume) {
+    schedulePreviewAutoScrollResume();
+  }
+}
+
+function animatePreviewAutoScroll(timestamp) {
+  if (!lastPreviewAutoScrollTimestamp) {
+    lastPreviewAutoScrollTimestamp = timestamp;
+  }
+
+  const delta = Math.min(timestamp - lastPreviewAutoScrollTimestamp, 32);
+  lastPreviewAutoScrollTimestamp = timestamp;
+
+  if (!isPreviewAutoScrollPaused) {
+    const horizontal = isPreviewRailHorizontal();
+    const loopSize = getPreviewLoopSize();
+    const viewportSize = horizontal ? rail.clientWidth : rail.clientHeight;
+
+    if (loopSize > viewportSize) {
+      previewAutoScrollOffset += delta * PREVIEW_AUTO_SCROLL_SPEED;
+
+      if (previewAutoScrollOffset >= loopSize) {
+        previewAutoScrollOffset -= loopSize;
+      }
+
+      if (horizontal) {
+        rail.scrollLeft = previewAutoScrollOffset;
+      } else {
+        rail.scrollTop = previewAutoScrollOffset;
+      }
+      normalizePreviewScrollPosition();
+    }
+  }
+
+  previewAutoScrollFrame = window.requestAnimationFrame(animatePreviewAutoScroll);
+}
+
+function startPreviewAutoScroll() {
+  if (previewAutoScrollFrame) {
+    return;
+  }
+
+  lastPreviewAutoScrollTimestamp = 0;
+  previewAutoScrollOffset = isPreviewRailHorizontal() ? rail.scrollLeft : rail.scrollTop;
+  previewAutoScrollFrame = window.requestAnimationFrame(animatePreviewAutoScroll);
+}
+
+rail.addEventListener("scroll", normalizePreviewScrollPosition, {passive: true});
+rail.addEventListener("pointerdown", () => pausePreviewAutoScroll(false));
+rail.addEventListener("pointerup", schedulePreviewAutoScrollResume);
+rail.addEventListener("pointercancel", schedulePreviewAutoScrollResume);
+rail.addEventListener("lostpointercapture", schedulePreviewAutoScrollResume);
+document.addEventListener("pointerup", schedulePreviewAutoScrollResume);
+rail.addEventListener("wheel", () => {
+  pausePreviewAutoScroll(false);
+  window.clearTimeout(previewWheelTimer);
+  previewWheelTimer = window.setTimeout(schedulePreviewAutoScrollResume, WHEEL_SETTLE_DELAY);
+}, {passive: true});
+window.addEventListener("resize", () => {
+  normalizePreviewScrollPosition();
+  schedulePreviewAutoScrollResume();
+});
+
 function updateStageFallbackMouse(x, y) {
   lastStageMouseX = x;
   lastStageMouseY = y;
@@ -384,24 +508,31 @@ function setActivePlayable(path, scrollIntoView = false) {
   }, 1000);
 }
 
-function renderCards() {
-  rail.innerHTML = "";
+function createPlayableCard(playable, copyIndex) {
+  const card = document.createElement("button");
+  card.type = "button";
+  card.className = "card";
+  card.dataset.path = playable.path;
+  card.dataset.copy = String(copyIndex);
 
-  playables.forEach((playable) => {
-    const card = document.createElement("button");
-    card.type = "button";
-    card.className = "card";
-    card.dataset.path = playable.path;
-
-    card.innerHTML = `
+  card.innerHTML = `
       <div class="thumb">
         <img src="${playable.image}" alt="">
       </div>
     `;
 
-    card.addEventListener("click", () => setActivePlayable(playable.path, true));
-    rail.appendChild(card);
-  });
+  card.addEventListener("click", () => setActivePlayable(playable.path));
+  return card;
+}
+
+function renderCards() {
+  rail.innerHTML = "";
+
+  for (let copyIndex = 0; copyIndex < 2; copyIndex += 1) {
+    playables.forEach((playable) => {
+      rail.appendChild(createPlayableCard(playable, copyIndex));
+    });
+  }
 }
 
 function loadPlayables() {
@@ -410,6 +541,8 @@ function loadPlayables() {
   renderCards();
   setEmptyStage();
   updatePlayableScrollHints();
+  normalizePreviewScrollPosition();
+  startPreviewAutoScroll();
 }
 
 loadDesktopRunawayCat();
