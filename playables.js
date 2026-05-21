@@ -3,10 +3,10 @@ window.PLAYABLES = [
     path: "builds/portfolio/BlackHole.html",
     image: "builds/portfolio/BlackHole.png"
   },
-  {
-    path: "builds/portfolio/CoreStack.html",
-    image: "builds/portfolio/coreStack.png"
-  },
+  // {
+  //   path: "builds/portfolio/CoreStack.html",
+  //   image: "builds/portfolio/coreStack.png"
+  // },
   {
     path: "builds/portfolio/desert.html",
     image: "builds/portfolio/desert.png"
@@ -39,10 +39,10 @@ window.PLAYABLES = [
     path: "builds/portfolio/snake.html",
     image: "builds/portfolio/snake.png"
   },
-  {
-    path: "builds/portfolio/Tetrisfreeplace.html",
-    image: "builds/portfolio/Tetrisfreeplace.png"
-  },
+  // {
+  //   path: "builds/portfolio/Tetrisfreeplace.html",
+  //   image: "builds/portfolio/Tetrisfreeplace.png"
+  // },
   {
     path: "builds/portfolio/whiteout.html",
     image: "builds/portfolio/whiteout.png"
